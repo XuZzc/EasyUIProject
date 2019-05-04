@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link href="EasyUI/themes/default/easyui.css" rel="stylesheet" />
+    <link href="EasyUI/themes/icon.css" rel="stylesheet" />
+    <link href="EasyUI/plugins/portal.css" rel="stylesheet" />
+    <script type="text/javascript" src="EasyUI/jquery-1.8.3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="EasyUI/jquery.easyui.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="EasyUI/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
+    <script type="text/javascript" src="EasyUI/plugins/jquery.portal.js" charset="utf-8"></script>
+    <style type="text/css">
+        #northA {
+            background-color: #d4edea;
+        }
+
+        #northAtop {
+            background-image: url("images/bg1.jpg");
+            background-position: left center;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <div id="cc" class="easyui-layout" data-options="fit:true" style="height: 400px;">
+        <!--北部区域-->
+        <div id="northA" data-options="region:'north',split:true,height:110">
+            <div id="northAtop">
+                <div id="topa" style="width: 100%; height: 80px; text-align: right;">
+                    工具菜单：
+                    <a id="btn1" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">登录</a>
+                    <a id="btn2" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">注册</a>
+                    <a id="btn3" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">注销</a>
+                </div>
+                <div id="bottoma" style="width: 100%; height: 20px; text-align: right;">
+                    欢迎区域：
+                  <span id="UserNameLogin"></span>
+                </div>
+            </div>
+        </div>
+
+        <!--南部区域-->
+        <div data-options="region:'south',split:true,height:35" style="text-align: center; padding-top: 5px;">
+            版权所有：@2019Evil工作室研发中心
+        </div>
+        <!--东部区域-->
+        <div data-options="region:'east',iconCls:'icon-reload',title:'快速查询',split:true,width:130"></div>
+        <!--西部区域-->
+        <div data-options="region:'west',title:'菜单区域 ',split:true ,width:180">
+            <div id="accordionNew" class="easyui-accordion" style="width: 300px; height: 200px;" data-options="selected:0,border:false,fit:true">
+                <div title="业务模块" data-options="iconCls:'icon-save'" style="overflow: auto; padding: 10px;">
+                    <div id="yw">
+                    </div>
+
+                </div>
+                <div title="视频管理模块" data-options="iconCls:'icon-reload'" style="overflow: auto; padding: 10px;">
+                    Content2
+                </div>
+                <div title="系统管理模块" data-options="iconCls:'icon-add'" style="overflow: auto; padding: 10px;">
+                    Content3
+                </div>
+            </div>
+
+        </div>
+
+        <!--中部区域-->
+        <div data-options="region:'center'">
+            <div id="tt" class="easyui-tabs" style="width: 500px; height: 250px;" data-options="fit:true,border:false">
+                <div title="用户欢迎界面" style="padding: 20px;" data-options="href:'portal_manager.html',loadingMessage:'欢迎界面加载中......'"></div>
+            </div>
+        </div>
+    </div>
+
+    <!--登录-->
+    <div id="login">
+        <form id="form1">
+            <table style="width: 100%;">
+                <tr>
+                    <td class="auto-style1" style="text-align: right;">用户名:</td>
+                    <td colspan="2">
+                        <input name="userName" id="userName" />
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="auto-style1" style="text-align: right;">密码:</td>
+                    <td colspan="2">
+                        <input name="userPwd" id="userPwd" type="password" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <!--注册-->
+    <div id="regest">
+        <form id="form2">
+            <table style="width: 100%;">
+                <tr>
+                    <td class="auto-style1" style="text-align: right;">用户名：</td>
+                    <td colspan="2">
+                        <input name="Name" id="Name" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="auto-style1" style="text-align: right;">密码：</td>
+                    <td colspan="2">
+                        <input name="Pwd" id="Pwd" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="auto-style1" style="text-align: right;">确认密码：</td>
+                    <td colspan="2">
+                        <input name="reginPwd" id="reginPwd" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="auto-style1" style="text-align: right;">QQ：</td>
+                    <td colspan="2">
+                        <input name="QQ" id="QQ" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="auto-style1" style="text-align: right;">电话号码：</td>
+                    <td colspan="2">
+                        <input name="phone" id="phone" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="auto-style1" style="text-align: right;">地址：</td>
+                    <td colspan="2">
+                        <input name="Address" id="Address" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <!--脚本JS-->
+    <script type="text/javascript">
+        $(function () {
+
+            addMenu();
+            LoginList();
+        })
+
+        //登陆
+        function LoginList() {
+            //登陆
+            $("#btn1").linkbutton({
+                onClick: function () {
+                    $("#login").dialog({
+                        title: "用户登录",
+                        collapsible: true,
+                        modal: true,
+                        buttons: [
+                            {
+                                text: '登录',
+                                iconCls: 'icon-add',
+                                handler: function () {
+                                    console.info("您点击了登陆按钮！");
+                                    ajaxFrmlogin();
+                                    console.info("完成登陆函数体");
+                                }
+                            },
+                               {
+                                   text: '重置',
+                                   iconCls: 'icon-add',
+                                   handler: function () {
+                                       console.info("重置！");
+                                       $("#userName").val("");
+                                       $("#userPwd").val("");
+                                   }
+                               }
+                        ]
+
+                    })
+                }
+            })
+            //注册
+            $("#btn2").linkbutton({
+                onClick: function () {
+                    $("#regest").dialog({
+                        title: "用户注册",
+                        collapsible: true,
+                        modal: true,
+                        buttons: [
+                            {
+                                text: '注册',
+                                iconCls: 'icon-add',
+                                handler: function () {
+                                    ajaxFrmregest();
+                                }
+                            },
+                               {
+                                   text: '重置',
+                                   iconCls: 'icon-add',
+                                   handler: function () {
+                                       console.info("重置！");
+                                       $("#Name").val("");
+                                       $("#Pwd").val("");
+                                       $("#reginPwd").val("");
+                                       $("#QQ").val("");
+                                       $("#phone").val("");
+                                       $("#Address").val("");
+                                   }
+                               }
+                        ]
+                    })
+                }
+            })
+            //注销
+            $("#btn3").linkbutton({
+                onClick: function () {
+                    $("#UserNameLogin").val("");
+                }
+
+
+            })
+
+        }
+        //登陆提交的处理函数
+        function ajaxFrmlogin() {
+            var LoginList = $("#login");
+            var username = "";
+            var userpwd = "";
+            $("#form1").form("submit", {
+                url: "ASPContent/Login.aspx",
+                success: function (data) {
+                    //服务器端返回字符串转成json对象
+                    var jsonData = $.parseJSON(data);
+                    //console.info("测试data");
+                    //console.info(jsonData);
+                    if (jsonData.intchk == 0) {
+                        $("#login").dialog("close");//关闭登陆窗体
+                        $("#UserNameLogin").html("欢迎您：【<font color='blue'>" + username + "</font>】");
+                        //console.info("登陆成功")
+                    }
+                    else {
+                        $.messager.alert("提示", jsonData.strMsg);
+                    }
+                },
+                onSubmit: function () {
+                    username = $("#userName").val();
+                    //console.info(username);
+                    userpwd = $("#userPwd").val();
+                    //console.info(userpwd);
+                    if (username.length == 0 || userpwd == 0) {
+                        $.messager.alert('警告', '用户名和密码不能为空！');
+                        return false;
+                    }
+                    return true;
+                }
+            })
+        }
+        //注册提交的处理函数
+        function ajaxFrmregest() {
+            var LoginList = $("#regest");
+            var username = "";
+            var userpwd = "";
+            $("#form2").form("submit", {
+                url: "ASPContent/Addregist.aspx",
+                success: function (data) {
+                    //服务器端返回字符串转成json对象
+                    var jsonData = $.parseJSON(data);
+                    //console.info("测试data");
+                    //console.info(jsonData);
+                    if (jsonData.intchk == 0) {
+                        $("#regest").dialog("close");//关闭登陆窗体                    
+                        console.info("注册成功")
+                    }
+                    else {
+                        $.messager.alert("提示", jsonData.strMsg);
+                    }
+                },
+                onSubmit: function () {
+                    //用户名
+                    Name = $("#Name").val();
+                    console.info(Name);
+                    //密码
+                    Pwd = $("#Pwd").val();
+                    console.info(Pwd);
+                    //确认密码
+                    reginPwd = $("#reginPwd").val();
+                    console.info(reginPwd);
+                    //QQ
+                    QQ = $("#QQ").val();
+                    console.info(QQ);
+                    //phone
+                    phone = $("#phone").val();
+                    console.info(phone);
+                    //Address
+                    Address = $("#Address").val();
+                    console.info(Address);
+
+                    if (Name.length == 0 || Pwd == 0 || reginPwd == 0 || QQ == 0 || phone == 0 || Address == 0 ) {
+                        $.messager.alert('警告', '请填入注册信息，不能为空！');
+                        return false;
+                    }
+                    return true;
+                }
+
+
+            })
+
+
+
+
+        }
+        //菜单数据源
+        var dataNew = [{
+            "id": "1",
+            "text": "产品管理",
+            "state": "open",
+            "children": [
+                {
+                    "id": "01",
+                    "text": "展示产品列表",
+                    "attributes": { "url": "ProductList.html" }
+                },
+        {
+            "id": "11",
+            "text": "添加产品管理",
+            "attributes": { "url": "addproduct.html" }
+        },
+        {
+            "id": "12",
+            "text": "修改产品管理",
+            "attributes": { "url": "editproduct.html" }
+        }
+            ]
+        }
+        ];
+        //绑定数据源和添加菜单的点击事件
+        function addMenu() {
+            $("#yw").tree({
+                data: dataNew,
+                onClick: function (node) {
+                    //判断是目录还是导航菜单项
+                    if (node.attributes != null) {
+                        if (
+                           $("#tt").tabs('exists', node.text))
+                            $('#tt').tabs('select', node.text);
+                        else addPanel(node);
+                    }
+
+                }
+            });
+        }
+        function addPanel(treeNode) {
+            $("#tt").tabs("add", {
+                title: treeNode.text,
+                href: treeNode.attributes.url,
+                loadingMessage: "数据加载中...",
+                closable: true
+            });
+        }
+
+    </script>
+
+</body>
+</html>
+
+

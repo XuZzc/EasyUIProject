@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../UI/themes/default/easyui.css"  />
+    <link rel="stylesheet" type="text/css" href="../UI/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="../UI/plugins/portal.css"/>
+    <script type="text/javascript" src="../Scripts/jquery-1.8.2.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../UI/jquery.easyui.min.js"  charset="utf-8"></script> 
+    <script type="text/javascript" src="../UI/locale/easyui-lang-zh_CN.js"  charset="utf-8"></script>
+	<script type="text/javascript" src="../UI/plugins/jquery.portal.js"   charset="utf-8"></script>
+
+</head>
+<body>
+    	<script type="text/javascript"   charset="utf-8">
+    	    $(function () {
+    	        $('#portal_new').portal({
+    	            border: false,
+    	            fit: true
+    	        });
+    	    });
+	</script>
+    <div id="portal_new">   
+        <div style="width:33%">
+             <div id="frm1" style="height:150px;" title="用户管理信息">
+                 <ul>
+                     <li>高级管理员用户</li>
+                     <li>系统管理员用户</li>
+                     <li>默认用户</li>
+                     <li>Administrator用户</li>
+                 </ul>
+             </div>
+             <div id="frm2" style="height:150px;" title="权限信息">
+                 <ul>
+                     <li>产品添加权限</li>
+                     <li>用户管理权限</li>
+                     <li>系统设置权限</li>
+                     <li>新闻信息管理权限</li>
+                 </ul>
+             </div>
+        </div>   
+        <div style="width:43%">
+            <div id="frm3" style="height:150px;" title="行业新闻提示">
+                 <ul>
+                     <li>日刊：全球气候变暖将导致粮食危机风险大增</li>
+                     <li> 1.6亿年前恐龙化石引热议：恐龙都长羽毛(图)</li>
+                     <li>哪些行业利润高？2014上半年那些偷着乐的行业</li>
+                     <li>教你各种果蔬汁DIY，喝出营养喝出健康！</li>
+                 </ul>
+            </div>
+            <div id="frm4" style="height:150px; text-align:center;" title="时钟">
+                <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="100" height="100">
+				      <param name="movie" value="http://www.respectsoft.com/onlineclock/analog.swf">
+				      <param name=quality value=high>
+				      <param name="wmode" value="transparent">
+				      <embed src="http://www.respectsoft.com/onlineclock/analog.swf" width="100" height="100" quality=high pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" wmode="transparent"></embed>
+				</object>
+            </div>
+        </div>   
+        <div style="width:23%">
+             <div id="frm5" style="height:150px;" title="用户管理信息">信息加载中。。。</div>
+             <div id="frm6" style="height:150px;" title="股票行情">信息加载中。。。</div>
+        </div> 
+    </div>
+</body>
+</html>

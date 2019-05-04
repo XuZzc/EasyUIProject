@@ -1,0 +1,485 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link href="EasyUI/themes/default/easyui.css" rel="stylesheet" />
+    <link href="EasyUI/themes/icon.css" rel="stylesheet" />
+    <script type="text/javascript" src="EasyUI/jquery-1.8.3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="EasyUI/jquery.easyui.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="EasyUI/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
+    <script type="text/javascript" src="EasyUI/plugins/datagrid-detailview.js" charset="utf-8"></script>
+</head>
+<body>
+    <!--查询-->
+   <div id="selected">
+         <select class="easyui-combobox" id="ProClassInfo" style="width:180px;"></select>
+         <a class="easyui-linkbutton" id="search" data-options="iconCls:'icon-search'" >查询</a>
+   </div>
+    <!--显示-->
+    <div>
+        <table id="tb1"></table>
+    </div>
+    <!--  添加-->
+    <div id="AddInfo">
+        <form id="form1">
+            <table width="360" border="0" cellspacing="20">
+                <tr>
+                    <td width="121" align="right">产品名称：</td>
+                    <td width="189">
+                        <input id="proName" name="proName" class="easyui-validatebox textbox" data-options="required:true" messingmessage="请输入产品名称信息！" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="121" align="right">产品图片：</td>
+                    <td width="189">
+                        <input id="proimg" name="proimg" class="easyui-validatebox textbox" data-options="required:true" messingmessage="请输入产品名称信息！" />
+                    </td>
+                </tr>
+                 <tr>
+                    <td width="121" align="right">产品类别：</td>                 
+                    <td width="189">
+                        <select id="protype" class="easyui-combobox" name="protype" style="width: 121px;"messingmessage="请选择产品类型！">
+                            <option value="0"selected="selected">请选择...</option>
+                            <option value="1">蔬菜水果</option>
+                            <option value="2">鲜肉禽蛋</option>
+                            <option value="3">鲜奶乳品</option>
+                            <option value="4">海鲜水产</option>
+                            <option value="5">冷冻冷藏</option>
+                            <option value="6">粮油副食</option>
+                            <option value="7">休闲零食</option>                           
+                        </select>
+
+
+                    </td>
+                </tr>
+                <tr>
+                    <td width="121" align="right">产品价格：</td>
+                    <td width="189">
+                        <input id="proprice" name="proprice" class="easyui-validatebox textbox" data-options="required:true" messingmessage="请输入产品名称信息！" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="121" align="right">产品详情：</td>
+                    <td width="189">
+                        <input id="prodeil" name="prodeil" class="easyui-validatebox textbox" data-options="required:true" messingmessage="请输入产品名称信息！" />
+                    </td>
+                </tr>
+               
+            </table>
+
+
+        </form>
+
+    </div>
+    <script type="text/javascript">
+        //定义全局变量，默认值为undefined；作用：保存当前编辑行的索引值，如果无编辑行索引值则为默认值，
+        //方便程序判断当前用户是否对某些数据进行编辑操作
+        var editRow = undefined;
+        $(function () {
+            tinajia();
+            //下拉框的值
+            $("#ProClassInfo").combobox({
+                url: "ASPContent/ProClassList.aspx",
+                valueField: 'ClassID',
+                textField: 'ClassName',
+                method: 'post',
+                editable: false
+
+            })
+            // 根据下拉框选中的类别进行查询
+            $("#search").linkbutton({
+                onClick: function () {
+                    $.ajax({
+                        url: "ASPContent/SeachProByCid.aspx",
+                        type: "post",
+                        data: {
+                            cid: $("#ProClassInfo").combobox("getValue")
+                        },
+                        success: function (data) {
+                            console.info(data);                        
+                            $("#tb1").datagrid("loadData", JSON.parse(data));
+                            console.info("查询成功");
+                        },
+                        error: function (error) {
+                            console.info(error);
+                            console.info("查询失败");
+                        }
+                    })
+                }
+            })
+
+
+            
+            //显示
+            $("#tb1").datagrid({
+                url: 'ASPContent/ProductList.aspx',
+                striped: true,//显示斑马线效果
+                singleSelect: false,// 只选中一行
+                pagination: true,//底部显示分页工具栏
+                rownumbers: true,//显示一个行号列
+                fitColumns: true,//自动撑满表格
+                pageList: [5, 10],//设置分页属性时初始化页面大小，选择列表
+                pageSize: 10,//每页10条
+                //data: {//数据加载
+                //    'total': 10,//总记录数
+                //    'rows': dataNew//对象数组
+                //},
+                columns: [[//控件列配置对象
+                    {
+                        field: "ck", title: "复选框", width: 100, checkbox: true
+                    },
+                    {
+                        field: 'ProductID', align: 'center', title: '产品编号', width: 30
+                    },
+                    {
+                        field: 'ProductName', align: 'center', title: '产品名称', width: 80,
+                        //编辑器
+                        editor: {
+                            //指明编辑类型
+                            type: 'validatebox',
+                            //组件属性、事件和方法
+                            options: {
+                                required: true
+                            }
+                        }
+
+                    },
+                    {
+                        field: 'ProductPic', align: 'center', title: '产品图片', width: 100,
+                        //格式化器
+                        formatter: function (value, row, index) {
+                            return "<img src='/ProductPic/" + value + "' style='width:100px;height:80px;'/>";
+                        }
+
+                    },
+                    {
+                        field: 'ProductPrice', align: 'center', title: '产品价格', width: 30,
+                        formatter: function (value, row, index) {
+                            return "¥<span style='color:red;font-weight:bold'>" + row.ProductPrice + "</span>元";
+                        },  //编辑器
+                        editor: {
+                            //指明编辑类型
+                            type: 'validatebox',
+                            //组件属性、事件和方法
+                            options: {
+                                required: true
+                            }
+                        }
+                    },
+                    {
+                        field: 'ProductDesc', align: 'center', title: '产品简介', width: 120,  //编辑器
+                        editor: {
+                            //指明编辑类型
+                            type: 'validatebox',
+                            //组件属性、事件和方法
+                            options: {
+                                required: true
+                            }
+                        }
+                    },
+                    {
+                        field: 'AddTime', align: 'center', title: '添加时间', width: 80,
+                        formatter: function (value, row, index) {
+                            var date = new Date(value);
+                            var y = date.getFullYear();
+                            var m = date.getMonth() + 1;
+                            var d = date.getDate();
+                            return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+                        },  //编辑器
+                        editor: {
+                            //指明编辑类型
+                            type: 'validatebox',
+                            //组件属性、事件和方法
+                            options: {
+                                required: true
+                            }
+                        }
+                    },
+                    {
+                        field: 'sc', align: 'center', title: '删除', width: 100,
+                        formatter: function (value, row, index) {
+                            return "<a href='javascript:void(0)'style='font-size:16px;'OnClick='DelProById(" + row.ProductID + ")'>删除</a>"
+                        }
+                    }
+                ]],
+                toolbar: [//自定义工具
+                    {
+                        text: "添加",
+                        iconCls: 'icon-add',
+                        handler: function () {
+                            console.info("执行添加操作");
+                            $("#AddInfo").dialog('open');
+                        }
+
+                    },
+                   {
+                       text: "批量删除",
+                       iconCls: 'icon-remove',
+                       handler: function () {
+                           console.info("批量删除");
+                           var sel = $("#tb1").datagrid("getChecked");
+                           console.info(sel);
+                           if (sel == 0) {
+                               $.messager.alert("提示", "未选中任何数据");
+                           }
+                           else {
+                               //执行删除操作
+                               DelProList(sel)
+                           }
+                       }
+                   },
+                   {
+                       text: "撤销",
+                       iconCls: 'icon-redo',
+                       handler: function () {
+                           console.info("执行撤销操作");
+                           if (editRow == undefined) {
+                               $.messager.alert('警告', '未选中任何操作数据行');
+                           }
+                           else {
+                               $("#tb1").datagrid("endEdit", editRow);//结束编辑状态，触发onAfterEdit
+                               $("#tb1").datagrid("rejectChanges");//回滚操作
+                           }
+                           $("#tb1").datagrid("unselectAll");//取消选中所有当前页中所有的行
+
+                       }
+                   },
+                   {
+                       text: "保存",
+                       iconCls: 'icon-save',
+                       handler: function () {
+                           console.info("执行保存操作");
+                           console.info(editRow);//当前选中行索引
+                           $("#tb1").datagrid("selectRow", editRow);//根据索引设置当前选中行
+                           $("#tb1").datagrid("endEdit", editRow);//结束编辑状态，触发onAfterEdit事件
+                           var itemRow = $("#tb1").datagrid("getSelected");//获取当前选中行的对象
+                           console.info("获取当前选中行的对象");
+                           console.info(itemRow);
+                           console.info("执行保存操作")
+                           update(itemRow);//调用修改数据的脚本方法
+                           console.info("已经保存")
+                           $("#tb1").datagrid('unselectAll');//取消选择所有当前页中所有的行                      
+                       }
+                   }
+
+                ],
+                onAfterEdit: function (rowsIndex, rowData, changes) {
+                    editRow = undefined;//操作完成后，操作状态恢复初始值，等待下一个编辑行的操作
+                }
+
+            });
+
+
+
+
+
+            //详细展示
+            $("#tb1").datagrid({
+                view: detailview,
+                detailFormatter: function (index, row) {
+                    var str = "";
+                    var rowIndex = index + 1;
+                    str += "<div id='div-" + index + "'style='padding:5px;'>";
+                    str += "这是本页第" + rowIndex.toString() + "条数据<br/>";
+                    str += "商品名称：" + row.ProductName + "<br/>";
+                    str += "价格为：¥" + row.ProductPrice + "元<br/>";
+                    str += "添加时间：" + row.AddTime + "<br/>";
+                    str += "</div>";
+                    return str;
+
+                    //修改时间的方法
+                    //formatter: function (value,row,index) {
+                    //    var date = new Date(value);
+                    //    var y = date.getFullYear();
+                    //    var m=date.getMonth()+1;
+                    //    var d = date.getDate();
+                    //    return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+                    //}
+                },
+                onExpandRow: function (index, row) {
+                    $('#div-' + index).panel({
+                        title: "详细信息显示",
+                        height: 100,
+                        width: 100,
+                        fit: true
+                    });
+                    $('#tb1').datagrid('fixDetailRowHeight', index);
+                },
+                //双击数据进入编辑状态
+                onDblClickRow: function (rowIndex, rowData) {
+                    if (editRow != undefined) {
+                        //数据行中某一成员是编辑状态，则取消编辑状态
+                        $("#tb1").datagrid('endEdit', editRow);
+                    }
+                    if (editRow == undefined) {
+                        //选中行不是编辑状态，则进入编辑状态
+                        $("#tb1").datagrid('beginEdit', rowIndex);
+                        editRow = rowIndex;//保存当前索引
+                    }
+                }
+            });
+        });
+
+        
+        //添加 ajaxpro()
+        function ajaxpro() {
+            $.ajax({
+                url: 'ASPContent/Addregist.aspx',
+                type: "post",
+                data: {
+                    proName: $("#proName").val(),
+                    proimg: $("#proimg").val(),
+                    protype: $("#protype").val(),
+                    proprice: $("#proprice").val(),
+                    prodeil: $("#prodeil").val(),
+                },
+                success: function (data) {
+                    console.info(data);
+                    $("#AddInfo").dialog("close");
+                    $("#tb1").datagrid("reload");
+                    $.messager.alert("提示", "添加成功！");
+                    closed();
+                },
+                error: function (error) {
+                    console.info(error);
+                    $.messager.alert("提示", "添加失败！");
+                }
+            })
+
+
+
+        }
+        //清空
+        function closed() {
+            $("#proName").val("");
+            $("#proimg").val("");
+            $("#protype").val("");
+            $("#proprice").val("");
+            $("#prodeil").val("");
+        }
+        function tinajia() {
+            //添加提示框
+            $("#AddInfo").dialog({
+                title: "添加产品信息",
+                collapsible: true,
+                width: 400,
+                height: 350,
+                modal: true,
+                buttons: [{
+                    text: '添加',
+                    iconCls: 'icon-add',
+                    handler: function () {
+                        console.info("执行添加用户操作");                      
+                        ajaxpro();//ajax提交表单的函数
+                        console.info("执行完毕");
+                    }
+                }, {
+                    text: '取消',
+                    iconCls: 'icon-remove',
+                    handler: function () {
+                        console.info("取消操作");
+                        $("#AddInfo").dialog("close");
+                    }
+
+                }
+                ]
+            })
+            $("#AddInfo").dialog("close");
+        }
+
+
+
+
+        //异步提交修改数据
+        function update(obj) {
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: 'ASPContent/update.aspx',
+                data: {
+                    ProductID: obj.ProductID,
+                    ProductName: obj.ProductName,
+                    ProductPic: obj.ProductPic,
+                    ProductPrice: obj.ProductPrice,
+                    ProductDesc: obj.ProductDesc,
+                    AddTime: obj.AddTime
+                },
+                success: function (data) {
+                    console.info(data);
+                    $.messager.alert('提示', data.strInfo);
+                    $("#tb1").datagrid('reload', {});//重新加载数据，且reload表示当前页码不变
+                },
+                error: function (error) {
+                 
+                    console.info(error);
+                    console.info("提交失败,操作未完成");
+                }
+            })
+
+
+
+        }
+
+
+
+
+        // 单行删除方法
+        function DelProById(pid) {
+            $.messager.confirm('确认', '您确认想要删除记录吗？', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: "ASPContent/DelProByID.aspx",
+                        type: "get",
+                        data: { id: pid },
+                        success: function (data) {
+                            if (data == "true") {
+                                $("#tb1").datagrid("reload", "ASPContent/DelProByID.aspx");
+                            }
+                        },
+                        error: function (error) {
+                            console.info(error);
+                        }
+                    })
+                }
+            });
+        }
+
+        // 批量删除
+        function DelProList(sel) {
+            $.ajax({
+                url: "ASPContent/DelProByAllID.aspx",
+                type: "post",
+                data: { ids: JSON.stringify(sel) },
+                dataType: "json",
+                success: function (data) {
+                    if (data == true) {
+                        $.messager.alert("提示", "删除成功");
+                        $("#tb1").datagrid("reload", "ASPContent/DelProByAllID.aspx");
+                    }
+                    else {
+                        $.messager.alert("提示", "删除失败");
+                    }
+                },
+                error: function () {
+                    $.messager.alert("提示", "删除失败，服务器出错");
+                }
+            });
+
+        }
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+
+
+</body>
+</html>
